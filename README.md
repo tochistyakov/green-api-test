@@ -9,6 +9,10 @@
 - Нативный Fetch API, HTTP long polling, AbortController, Web Locks.
 - ESLint.
 
+## Сайт в интернете
+Сайт находится в интернете на Yandex Cloud. Просмотреть и опробовать функционал можно по ссылке:
+https://green-api-test.website.yandexcloud.net/
+
 ## Локальный запуск
 
 Требуются Git, Node.js 24 и npm. Склонируйте репозиторий, установите зависимости и запустите приложение.
