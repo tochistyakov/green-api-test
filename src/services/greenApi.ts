@@ -2,7 +2,6 @@ import { apiFetch, createRequestScope } from "./apiTransport";
 import type {
   ConnectionResult,
   Credentials,
-  Diagnostic,
   InstanceState,
 } from "../types/connection";
 import type {
@@ -352,18 +351,9 @@ export async function checkAccount(
   request: CheckAccountRequest,
   signal: AbortSignal,
 ): Promise<CheckAccountResult> {
-  const started = performance.now();
-  let httpStatus: number | undefined;
-  let readable = false;
-  const diagnostic = (): Diagnostic => ({
-    elapsedMs: Math.round(performance.now() - started),
-    httpStatus,
-    cors: readable ? "readable" : "unconfirmed",
-  });
   const fail = (message: string): CheckAccountResult => ({
     ok: false,
     message,
-    diagnostic: diagnostic(),
   });
   const validation = validateCredentials(credentials);
   const recipient = parseRecipient(
@@ -378,7 +368,6 @@ export async function checkAccount(
     return {
       ok: false,
       message: validation ?? "Некорректный получатель.",
-      diagnostic: { elapsedMs: 0, cors: "not-tested" },
     };
   }
 
@@ -389,8 +378,7 @@ export async function checkAccount(
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(recipient.request),
     });
-    httpStatus = response.status;
-    readable = response.type === "cors";
+
     if (!response.ok) {
       return fail(httpMessage(response.status));
     }
@@ -442,7 +430,7 @@ export async function checkAccount(
     }
 
     if (data.exist === false) {
-      return { ok: true, account: { exist: false }, diagnostic: diagnostic() };
+      return { ok: true, account: { exist: false } };
     }
 
     if (
@@ -458,7 +446,6 @@ export async function checkAccount(
     return {
       ok: true,
       account: { exist: true, chatId: data.chatId },
-      diagnostic: diagnostic(),
     };
   } catch {
     return fail(
@@ -477,20 +464,11 @@ export async function getStateInstance(
   credentials: Credentials,
   signal: AbortSignal,
 ): Promise<ConnectionResult> {
-  const started = performance.now();
-  let httpStatus: number | undefined;
-  let readable = false;
-  const diagnostic = (): Diagnostic => ({
-    elapsedMs: Math.round(performance.now() - started),
-    httpStatus,
-    cors: readable ? "readable" : "unconfirmed",
-  });
   const validation = validateCredentials(credentials);
   if (validation) {
     return {
       kind: "error",
       message: validation,
-      diagnostic: { elapsedMs: 0, cors: "not-tested" },
     };
   }
 
@@ -502,14 +480,11 @@ export async function getStateInstance(
       scope.signal,
       { method: "GET" },
     );
-    readable = response.type === "cors";
-    httpStatus = response.status;
 
     if (!response.ok) {
       return {
         kind: "error",
         message: httpMessage(response.status),
-        diagnostic: diagnostic(),
       };
     }
 
@@ -525,7 +500,6 @@ export async function getStateInstance(
         kind: "error",
         message:
           "Ответ получен, но не содержит корректный JSON. Проверьте API URL.",
-        diagnostic: diagnostic(),
       };
     }
 
@@ -540,7 +514,6 @@ export async function getStateInstance(
         kind: "error",
         message:
           "Ответ API не содержит строковое поле stateInstance. Проверьте API URL.",
-        diagnostic: diagnostic(),
       };
     }
 
@@ -554,7 +527,6 @@ export async function getStateInstance(
       kind: state === "authorized" ? "success" : "warning",
       state,
       message: stateMessages[state],
-      diagnostic: diagnostic(),
     };
   } catch {
     const message = scope.timedOut
@@ -562,7 +534,7 @@ export async function getStateInstance(
       : signal.aborted
         ? "Проверка отменена."
         : "Браузер не получил доступный ответ. Возможны CORS, проблемы сети, DNS, TLS, блокировка расширением или перенаправление. Уточните причину в DevTools.";
-    return { kind: "error", message, diagnostic: diagnostic() };
+    return { kind: "error", message };
   } finally {
     scope.dispose();
   }

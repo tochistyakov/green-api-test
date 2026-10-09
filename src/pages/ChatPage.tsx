@@ -43,13 +43,12 @@ export function ChatPage({
 
     if (signal.aborted) return {};
     if (!result.ok) {
-      return { message: result.message, diagnostic: result.diagnostic };
+      return { message: result.message };
     }
     if (!result.account.exist) {
       return {
         message:
           "Пользователь не найден или его номер скрыт настройками приватности. Можно попробовать @username.",
-        diagnostic: result.diagnostic,
       };
     }
 

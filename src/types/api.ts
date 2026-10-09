@@ -1,5 +1,3 @@
-import type { Diagnostic } from "./connection";
-
 export type CheckAccountRequest =
   | { username: string; phoneNumber?: never }
   | { phoneNumber: number; username?: never };
@@ -9,8 +7,8 @@ export type CheckAccountResponse =
   | { exist: true; chatId: string };
 
 export type CheckAccountResult =
-  | { ok: true; account: CheckAccountResponse; diagnostic: Diagnostic }
-  | { ok: false; message: string; diagnostic: Diagnostic };
+  | { ok: true; account: CheckAccountResponse }
+  | { ok: false; message: string };
 
 export interface Recipient {
   address: string;
@@ -19,7 +17,6 @@ export interface Recipient {
 
 export interface CreateChatResult {
   message?: string;
-  diagnostic?: Diagnostic;
 }
 
 export interface SendMessageRequest {
