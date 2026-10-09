@@ -1,0 +1,99 @@
+.form {
+  display: flex;
+  flex-direction: column;
+}
+.form label {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 24px 0 9px;
+}
+.form label:first-child {
+  margin-top: 0;
+}
+.form input {
+  width: 100%;
+  height: 48px;
+  border: 1px solid #dce4ed;
+  border-radius: 9px;
+  padding: 0 14px;
+  background: #fff;
+  color: #243447;
+  font: inherit;
+  font-size: 14px;
+}
+.form input::placeholder {
+  color: #8795a5;
+}
+.form small {
+  margin-top: 8px;
+  color: #718295;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.password {
+  position: relative;
+}
+.password input {
+  padding-right: 50px;
+}
+.password button {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  height: 40px;
+  width: 40px;
+  border: 0;
+  background: transparent;
+  color: #718295;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+}
+.note {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.note svg {
+  flex-shrink: 0;
+}
+.submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border: 0;
+  border-radius: 9px;
+  color: #fff;
+  background: #3390ec;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  min-height: 49px;
+  margin-top: 30px;
+}
+.submit:hover {
+  background: #247cca;
+}
+.submit:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+.spinner {
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation: none;
+  }
+}
+
+.password button:hover {
+  background: #edf4fb;
+  color: #247cca;
+}
